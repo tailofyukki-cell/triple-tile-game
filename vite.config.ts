@@ -154,7 +154,8 @@ const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(
 
 export default defineConfig({
   plugins,
-  base: process.env.NODE_ENV === "production" ? "/triple-tile-game/" : "/",
+  // Manus deployment uses root path, GitHub Pages uses /triple-tile-game/
+  base: process.env.GITHUB_PAGES === "true" ? "/triple-tile-game/" : "/",
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
