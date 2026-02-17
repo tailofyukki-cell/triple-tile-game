@@ -103,7 +103,8 @@ function updateBlockedStatus(tiles: TileData[]): TileData[] {
       if (other.id === tile.id || other.layer <= tile.layer) return false;
       const dx = Math.abs(other.x - tile.x);
       const dy = Math.abs(other.y - tile.y);
-      return dx < 60 && dy < 60;
+      // Tile size is 64px (w-16 h-16), so overlap threshold should be ~40px
+      return dx < 40 && dy < 40;
     });
     return { ...tile, isBlocked };
   });

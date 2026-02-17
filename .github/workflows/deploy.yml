@@ -35,12 +35,17 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm build
+        run: NODE_ENV=production pnpm build
+        env:
+          NODE_ENV: production
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist/public
+          path: './dist/public'
 
   deploy:
     environment:
