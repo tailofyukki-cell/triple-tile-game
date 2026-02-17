@@ -55,19 +55,19 @@ export function generateStage(stage: number): TileData[] {
   const tiles: TileData[] = [];
   let id = 0;
   
-  // Generate tiles (each type appears 6 times)
-  for (let i = 0; i < tileCount / 6; i++) {
-    for (const type of types) {
-      for (let j = 0; j < 6; j++) {
-        tiles.push({
-          id: `tile-${id++}`,
-          type,
-          x: 0,
-          y: 0,
-          layer: 0,
-          isBlocked: false,
-        });
-      }
+  // Generate tiles: each type appears multiple times, total must be divisible by 3
+  // For stage 1: 24 tiles, 4 types, each appears 6 times
+  const tilesPerType = Math.floor(tileCount / typeCount);
+  for (const type of types) {
+    for (let j = 0; j < tilesPerType; j++) {
+      tiles.push({
+        id: `tile-${id++}`,
+        type,
+        x: 0,
+        y: 0,
+        layer: 0,
+        isBlocked: false,
+      });
     }
   }
   
@@ -77,17 +77,21 @@ export function generateStage(stage: number): TileData[] {
     [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
   }
   
-  // Position tiles in a pyramid-like layout
-  const gridSize = Math.ceil(Math.sqrt(tileCount));
+  // Position tiles in layers with different grid positions
+  const gridCols = Math.ceil(Math.sqrt(tileCount * 1.5));
+  const gridRows = Math.ceil(tileCount / gridCols / 3);
   let tileIndex = 0;
   
   for (let layer = 0; layer < 3; layer++) {
     const tilesInLayer = Math.floor(tileCount / 3);
+    const startOffset = layer * 2; // Different starting position for each layer
+    
     for (let i = 0; i < tilesInLayer && tileIndex < tiles.length; i++) {
-      const row = Math.floor(i / gridSize);
-      const col = i % gridSize;
-      tiles[tileIndex].x = col * 80 + layer * 10;
-      tiles[tileIndex].y = row * 80 + layer * 10;
+      const row = Math.floor(i / gridCols) + startOffset;
+      const col = (i % gridCols) + startOffset;
+      
+      tiles[tileIndex].x = col * 70;
+      tiles[tileIndex].y = row * 70;
       tiles[tileIndex].layer = layer;
       tileIndex++;
     }
